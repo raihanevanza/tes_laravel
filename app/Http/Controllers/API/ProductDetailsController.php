@@ -18,10 +18,15 @@ class ProductDetailsController extends BaseController
     public function index()
     {
         $data = products::join('categories', 'categories.categories_id', '=', 'products.categories_id')
-                    ->groupby('categories.type')
-              		->get(['products.products_id', 'products.categories_id', 'products.code', 'categories.type']);
-                    
-        return $data;
+                    // ->groupby('products.products_id','products.code', 'categories.type')
+              		->get(['products.products_id','products.code', 'categories.type']);
+        $arr = array();
+
+        foreach ($data as $key => $item) {
+        $arr[$item['type']][$key] = $item;
+        }
+        ksort($arr, SORT_NUMERIC);
+        return $arr;
     }
 
     public function productordering()
